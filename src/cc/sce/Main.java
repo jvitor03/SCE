@@ -34,13 +34,3 @@ public class Main {
     }
 
 }
-
-//int nElevators, floors, max;
-//Scanner scanner = new Scanner(System.in);
-
-//floors = scanner.nextInt();
-//nElevators = scanner.nextInt();
-//max = scanner.nextInt();
-
-//Building building = new Building(floors,nElevators, max);
-//building.listen();
