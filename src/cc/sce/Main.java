@@ -9,6 +9,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        Logger.prepareDirectoryOutput();
+        
         int numberFloors = scanner.nextInt();
         int numberElevators = scanner.nextInt();
         int maxPeoplePerElevator = scanner.nextInt();

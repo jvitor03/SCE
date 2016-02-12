@@ -10,7 +10,7 @@ public class Building {
     public Building(int numberFloors, int numberElevators) {
         this.numberFloors = numberFloors;
         this.numberElevators = numberElevators;
-        controller = new ElevatorController();
+        controller = new ElevatorController(numberFloors);
         this.elevators  = new Elevator[numberElevators];
     }
 
@@ -20,13 +20,15 @@ public class Building {
 
     public void createElevator(int index, int maxPeoplePerElevator, int startingFloor) {
         try {
-            elevators[index] = new Elevator(startingFloor, maxPeoplePerElevator, this.controller);
+            elevators[index] = new Elevator(index, startingFloor, maxPeoplePerElevator, this.controller);
         } catch(IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
     }
 
     public void startElevators() {
+        this.controller.setElevators(this.elevators);
+        
         for(int i=0; i<this.numberElevators; i++) {
             elevators[i].start();
         }

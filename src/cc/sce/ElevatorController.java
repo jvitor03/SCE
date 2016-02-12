@@ -7,14 +7,15 @@ import java.util.LinkedList;
 public class ElevatorController {
 
     private boolean permitRequests;
-    private HashMap<Integer, LinkedList<Integer>> requests;
+    private HashMap<Integer, LinkedList<Request>> requests;
     private int numberFloors;
     private HashMap<Integer,Integer> startingFloors;
+    private Elevator[] elevators;
 
     public ElevatorController(int numberFloors) {
         permitRequests = true;
         this.numberFloors = numberFloors;
-        requests = new HashMap<Integer, LinkedList<Integer>>();
+        requests = new HashMap<Integer, LinkedList<Request>>();
         startingFloors = new HashMap<Integer,Integer>();
     }
     
@@ -34,7 +35,7 @@ public class ElevatorController {
     		}
     	}
     	
-    	LinkedList<Integer> floorList = this.getRequests(currentFloor);
+    	LinkedList<Request> floorList = this.getRequests(currentFloor);
     	int offset = 0;
     	boolean signal = true;
     	
@@ -71,21 +72,31 @@ public class ElevatorController {
     }
 
     public void addRequest(int srcFloor, int dstFloor) {
-        Integer source = new Integer(srcFloor);
-        Integer destination = new Integer(dstFloor);
-
-        if( !requests.containsKey(source) ) {
-            requests.put(source, new LinkedList<Integer>());
+        if( !this.requests.containsKey(srcFloor) ) {
+            this.requests.put(srcFloor, new LinkedList<Request>());
         }
-
-        LinkedList<Integer> queue = requests.get(source);
-        queue.add(destination);
-        requests.put(source, queue);
+        LinkedList<Request> queue = requests.get(srcFloor);
+        queue.add(new Request(dstFloor));
+        requests.put(srcFloor, queue);
         notifyAll();
     }
 
-    public LinkedList<Integer> getRequests(int key){
+    public LinkedList<Request> getRequests(int key){
         return requests.get(key);
+    }
+    
+    public synchronized Request getRequest(int currentFloor) {
+        LinkedList<Request> queue = this.requests.get(currentFloor);
+        
+        if( queue != null ) {
+            return queue.poll();
+        }
+        
+        return null;
+    }
+
+    public void setElevators(Elevator[] elevators) {
+        this.elevators = elevators;
     }
 
     public synchronized boolean getPermitRequest() {
