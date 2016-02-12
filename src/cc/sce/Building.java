@@ -27,6 +27,8 @@ public class Building {
     }
 
     public void startElevators() {
+        this.controller.setElevators(this.elevators);
+        
         for(int i=0; i<this.numberElevators; i++) {
             elevators[i].start();
         }

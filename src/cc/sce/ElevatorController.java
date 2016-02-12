@@ -7,6 +7,7 @@ public class ElevatorController {
 
     private boolean permitRequests;
     private HashMap<Integer, LinkedList<Request>> requests;
+    private Elevator[] elevators;
 
     public ElevatorController() {
         this.permitRequests = true;
@@ -41,6 +42,10 @@ public class ElevatorController {
         }
         
         return null;
+    }
+
+    public void setElevators(Elevator[] elevators) {
+        this.elevators = elevators;
     }
 
     public boolean getPermitRequest() {
