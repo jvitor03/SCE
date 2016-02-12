@@ -34,7 +34,7 @@ public class ElevatorController {
         this.requests.get(srcFloor).add(new Request(dstFloor));
     }
     
-    public Request getRequest(int currentFloor) {
+    public synchronized Request getRequest(int currentFloor) {
         LinkedList<Request> queue = this.requests.get(currentFloor);
         
         if( queue != null ) {

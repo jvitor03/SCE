@@ -20,7 +20,7 @@ public class Building {
 
     public void createElevator(int index, int maxPeoplePerElevator, int startingFloor) {
         try {
-            elevators[index] = new Elevator(startingFloor, maxPeoplePerElevator, this.controller);
+            elevators[index] = new Elevator(index, startingFloor, maxPeoplePerElevator, this.controller);
         } catch(IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
