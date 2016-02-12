@@ -6,11 +6,11 @@ import java.util.LinkedList;
 public class ElevatorController {
 
     private boolean permitRequests;
-    private HashMap<Integer, LinkedList<Integer>> requests;
+    private HashMap<Integer, LinkedList<Request>> requests;
 
     public ElevatorController() {
-        permitRequests = true;
-        requests = new HashMap<Integer, LinkedList<Integer>>();
+        this.permitRequests = true;
+        this.requests = new HashMap<Integer, LinkedList<Request>>();
     }
 
     public int goToFloor(int currentFloor) {
@@ -26,17 +26,21 @@ public class ElevatorController {
     }
 
     public void addRequest(int srcFloor, int dstFloor) {
-        Integer source = new Integer(srcFloor);
-        Integer destination = new Integer(dstFloor);
-
-        if( !requests.containsKey(source) ) {
-            requests.put(source, new LinkedList<Integer>());
+        if( !this.requests.containsKey(srcFloor) ) {
+            this.requests.put(srcFloor, new LinkedList<Request>());
         }
 
-        LinkedList<Integer> queue = requests.get(source);
-        queue.add(destination);
-
-        requests.put(source, queue);
+        this.requests.get(srcFloor).add(new Request(dstFloor));
+    }
+    
+    public Request getRequest(int currentFloor) {
+        LinkedList<Request> queue = this.requests.get(currentFloor);
+        
+        if( queue != null ) {
+            return queue.poll();
+        }
+        
+        return null;
     }
 
     public boolean getPermitRequest() {
