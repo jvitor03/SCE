@@ -56,6 +56,9 @@ public class ElevatorController {
             }
         }
 
+        if( !this.elevatorRequest.containsKey(elevator) )
+            return elevator.getCurrentFloor();
+
         elevator.setElevatorState(ElevatorState.RUNNING);
         return this.elevatorRequest.get(elevator);
     }

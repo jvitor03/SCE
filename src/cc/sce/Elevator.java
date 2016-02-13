@@ -133,7 +133,7 @@ public class Elevator extends Thread {
 	@SuppressWarnings("finally")
 	private int up() {
 		try {
-			//Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
+			Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
 
 			if (this.currentFloor < controller.getNumberFloors()) {
 				this.currentFloor++;
