@@ -7,7 +7,6 @@ public class ElevatorController {
 
     private boolean permitRequests;
     private HashMap<Integer, LinkedList<Request>> requests;
-    private HashMap<Integer, ElevatorState> stateFloor;
     private HashMap<Elevator, Integer> elevatorRequest;
     private int numberFloors;
     private Elevator[] elevators;
@@ -16,41 +15,7 @@ public class ElevatorController {
         this.permitRequests = true;
         this.numberFloors = numberFloors;
         this.requests = new HashMap<Integer, LinkedList<Request>>();
-        this.stateFloor = new HashMap<Integer, ElevatorState>();
         this.elevatorRequest = new HashMap<Elevator, Integer>();
-    }
-
-    private synchronized int calculate(int currentFloor) {
-        int offset = 0;
-        int upValue   = 0;
-        int downValue = 0;
-
-        upValue = this.numberOfRequests(currentFloor);
-
-        if( upValue > 0 ) {
-            return currentFloor;
-        }
-
-        while ( upValue == 0 && downValue == 0 ) {
-            offset++;
-            if( currentFloor+offset < this.numberFloors ) {
-                upValue = this.numberOfRequests(currentFloor+offset);
-            }
-
-            if( currentFloor-offset >= 0 ) {
-                downValue = this.numberOfRequests(currentFloor-offset);
-            }
-
-            if( downValue == 0 && upValue==0 ) {
-                continue;
-            }
-        }
-
-        if( upValue >= downValue ) {
-            return currentFloor+offset;
-        } else {
-            return currentFloor-offset;
-        }
     }
 
     public synchronized void choose() {
@@ -159,7 +124,10 @@ public class ElevatorController {
 
     public void finishRequests() {
         permitRequests = false;
-       // notifyAll();
+
+        try {
+            notifyAll();
+        } catch(Exception e) {}
     }
 
     public int getNumberFloors(){
