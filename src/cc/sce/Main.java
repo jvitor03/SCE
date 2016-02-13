@@ -10,7 +10,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         Logger.prepareDirectoryOutput();
-        
+
         int numberFloors = scanner.nextInt();
         int numberElevators = scanner.nextInt();
         int maxPeoplePerElevator = scanner.nextInt();

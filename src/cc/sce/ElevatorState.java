@@ -1,5 +1,5 @@
 package cc.sce;
 
-public enum State {
+public enum ElevatorState {
 	WAITING, RUNNING;
 }

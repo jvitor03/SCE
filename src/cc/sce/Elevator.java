@@ -7,7 +7,7 @@ public class Elevator extends Thread {
 	private int maxPeople;
 	private ElevatorController controller;
 	private Logger log;
-	private State state;
+	private ElevatorState elevatorState;
 	// private ArrayList<Integer> people;
 
 	public Elevator(int id, int startingFloor, int maxPeople, ElevatorController controller) {
@@ -16,14 +16,37 @@ public class Elevator extends Thread {
 		this.maxPeople = maxPeople;
 		this.controller = controller;
 		this.log = new Logger(this.id);
-		this.state = State.WAITING;
+		this.elevatorState = ElevatorState.WAITING;
 	}
 
 	public void run() {
 		log.write("Turn on service.");
 		log.write("Starting floor: " + this.currentFloor);
 
-		// TODO:
+        // ENQUANTO EXISTIR REQUISIÇÕES E A MAIN NÃO BLOQUEÁ-LAS.
+		int aux = this.controller.goToFloor(this);
+
+        if(aux != this.currentFloor) {
+            if(aux > this.currentFloor) {
+                while(this.currentFloor<aux) {
+                    this.currentFloor = this.up();
+                    log.write("Moving up to " + aux + ". Current floor " + this.currentFloor);
+                }
+            } else {
+                while(this.currentFloor>aux) {
+                    this.currentFloor = this.down();
+                    log.write("Moving down to " + aux + ". Current floot" + this.currentFloor);
+                }
+            }
+        }
+
+        log.write("Attending request in " + this.currentFloor + " floor.");
+
+        // PEGAR AS PESSOAS DESSE ANDAR.
+
+        // LEVAR PARA SEUS RESPECTIVOS ANDARES
+
+        // VOLTAR PARA O LOOP
 
 		log.write("Ending floor: " + this.currentFloor);
 		log.write("Turn off elevator.");
@@ -33,14 +56,14 @@ public class Elevator extends Thread {
 	@SuppressWarnings("finally")
 	private int down() {
 		try {
-			Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
+			//Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
 
 			if (this.currentFloor > 0) {
 				this.currentFloor--;
 			} else {
 				throw new RuntimeException("[EXCEPTION] Impossible move down elevator.");
 			}
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			return this.currentFloor;
@@ -50,14 +73,14 @@ public class Elevator extends Thread {
 	@SuppressWarnings("finally")
 	private int up() {
 		try {
-			Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
+			//Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
 
-			if (this.currentFloor < this.maxPeople) {
+			if (this.currentFloor < controller.getNumberFloors()) {
 				this.currentFloor++;
 			} else {
 				throw new RuntimeException("[EXCEPTION] Impossible move up elevator.");
 			}
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			return this.currentFloor;
@@ -67,9 +90,9 @@ public class Elevator extends Thread {
 	public int getCurrentFloor() {
 		return this.currentFloor;
 	}
-	
-	public State getState(){
-		return this.state;
+
+	public ElevatorState getElevatorState(){
+		return this.elevatorState;
 	}
 
 }
