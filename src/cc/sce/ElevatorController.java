@@ -53,7 +53,7 @@ public class ElevatorController {
         }
     }
 
-    public void choose() {
+    public synchronized void choose() {
         boolean firstTime = true;
         Elevator elevatorClosely = null;
         int absoluteDistance = -1;
@@ -82,26 +82,27 @@ public class ElevatorController {
 
     public synchronized int goToFloor(Elevator elevator) {
 
-        while (numberOfRequests() == 0 && permitRequests) {
+        while( ( this.numberOfRequests()>0 || this.permitRequests) && !this.elevatorRequest.containsKey(elevator) ) {
             try {
+                System.out.println("I will blocked.");
                 wait();
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e) {
                 e.printStackTrace();
-            }
-            if( !permitRequests ){
-                return -1;  //tratar
             }
         }
 
-        if (elevatorRequest.containsValue(elevator)){
-            return elevatorRequest.get(elevator);
-        }  else {
-			//goToFloor(elevator);
-        	return calculate(elevator.getCurrentFloor());
-        }// Procuro o ID deste Elevador no array acima,
+        elevator.setElevatorState(ElevatorState.RUNNING);
+        return this.elevatorRequest.get(elevator);
+    }
 
-        // Se o elevatorId estiver no ARRAY_DOS_PICA retorno o andar que o mesmo deve atender, E troco o estado do andar para RUNNING.
-        // senão, chamo goToFloor novamente.
+    public synchronized void terminateRound(Elevator elevator) {
+        this.elevatorRequest.remove(elevator);
+        elevator.setElevatorState(ElevatorState.WAITING);
+        this.choose();
+
+        try {
+            notifyAll();
+        } catch(Exception e) {}
     }
 
     public synchronized int numberOfRequests(int floor) {
@@ -136,13 +137,16 @@ public class ElevatorController {
     }
 
     public synchronized Request getRequest(int currentFloor) {
+
+        if( !this.requests.containsKey(currentFloor) )
+            return null;
+
         LinkedList<Request> queue = this.requests.get(currentFloor);
 
-        if( queue != null ) {
-            return queue.poll();
-        }
+        if( queue.size() == 1 )
+            this.requests.remove(currentFloor);
 
-        return null;
+        return queue.poll();
     }
 
     public synchronized void setElevators(Elevator[] elevators) {
