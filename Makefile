@@ -23,6 +23,7 @@ CLASSES=$(DIR_SRC)/*.java
 ENTRYPOINT_CLASS=Main
 
 all:
+	@mkdir -p $(PATH_BIN)
 	$(JC) $(JFLAGS) -classpath $(PATH_SRC) -d $(PATH_BIN) -s $(PATH_SRC) $(CLASSES)
 	$(JAR) cfe $(PATH_BIN)/SCE.jar $(PKG).$(ENTRYPOINT_CLASS) -C $(PATH_BIN) $(PACKAGE)
 
