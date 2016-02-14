@@ -1,6 +1,15 @@
 package cc.sce;
 import java.util.Scanner;
 
+/**
+*
+* <p>Elevator Control System.
+* <p>Created for Concurrent Computing class(MAB117) at Federal University of Rio de Janeiro (UFRJ).
+* @Author Claudio Gonçalves
+* @Author João Vitor Rebouças
+* @version 1.0
+*
+*/
 public class Main {
 
     public final static long RUNTIME_START = System.currentTimeMillis();

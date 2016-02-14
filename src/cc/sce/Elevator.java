@@ -4,6 +4,11 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+* This class run and moves the elevator around the building.
+* @author Claudio Gonçalves
+* @author João Vitor Rebouças
+*/
 public class Elevator extends Thread {
 
 	private int id;
@@ -13,7 +18,14 @@ public class Elevator extends Thread {
 	private Logger log;
 	private ElevatorState elevatorState;
 
-	public Elevator(int id, int startingFloor, int maxPeople, ElevatorController controller) {
+	/**
+    * Constructor.
+    * @param id (required) The elevator id.
+    * @param startingFloor (required) The floor which the elevator will be when started.
+    * @param maxPeople (required) Max quantity of people allowed in the elevator.
+    * @param controller (required) The elevator controller.
+    */
+    public Elevator(int id, int startingFloor, int maxPeople, ElevatorController controller) {
 		this.id = id;
 		this.currentFloor = startingFloor;
 		this.maxPeople = maxPeople;
@@ -22,6 +34,10 @@ public class Elevator extends Thread {
 		this.elevatorState = ElevatorState.WAITING;
 	}
 
+    /**
+    * Start a new thread.
+    * This method execute the main elevator logic
+    */
     public void run() {
         log.write("Turn on service.");
         log.write("Starting floor: " + this.currentFloor + ".");
@@ -43,6 +59,10 @@ public class Elevator extends Thread {
 		log.close();
 	}
 
+    /**
+    * Moves the elevator to it's destiny
+    * @param destinationFloor
+    */
     private void moveToDestinationFloor(int destinationFloor) {
         if( destinationFloor != this.currentFloor) {
             if( destinationFloor > this.currentFloor) {
@@ -59,6 +79,10 @@ public class Elevator extends Thread {
         }
     }
 
+    /**
+    * This method get the people who made a request in the floor.
+    * @return A HashMap with the destination floor as key and the number of people as value.
+    */
     private HashMap<Integer,Integer> getPeople() {
         int counterPeople = 0;
         HashMap<Integer,Integer> people = new HashMap<Integer,Integer>();
@@ -72,12 +96,12 @@ public class Elevator extends Thread {
 
             counterPeople++;
 
-            log.write("Getting request ID: " + person.getID() + ". Destination floor: " + person.getDestionationFloor() + ".");
+            log.write("Getting request ID: " + person.getID() + ". Destination floor: " + person.getDestinationFloor() + ".");
 
-            if( !people.containsKey(person.getDestionationFloor()) ) {
-                people.put(person.getDestionationFloor(), 1);
+            if( !people.containsKey(person.getDestinationFloor()) ) {
+                people.put(person.getDestinationFloor(), 1);
             } else {
-                people.put(person.getDestionationFloor(), people.get(person.getDestionationFloor()) + 1);
+                people.put(person.getDestinationFloor(), people.get(person.getDestinationFloor()) + 1);
             }
         } while( counterPeople < this.maxPeople );
 
@@ -86,6 +110,10 @@ public class Elevator extends Thread {
         return people;
     }
 
+    /**
+    * Deliver the people in the elevator at the desired floor.
+    * @param people A HashMap with the destination floor as key and the number of people as value.
+    */
     private void deliveryPeople(HashMap<Integer,Integer> people) {
         ArrayList<Integer> up = new ArrayList<Integer>();
         ArrayList<Integer> down = new ArrayList<Integer>();
@@ -113,7 +141,11 @@ public class Elevator extends Thread {
         }
     }
 
-	@SuppressWarnings("finally")
+	/**
+    * Moves the elevator down one floor.
+    * @return The actual floor.
+    */
+    @SuppressWarnings("finally")
 	private int down() {
 		try {
 			Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
@@ -130,7 +162,11 @@ public class Elevator extends Thread {
 		}
 	}
 
-	@SuppressWarnings("finally")
+	/**
+    * Moves the elevator up one floor.
+    * @return The actual floor.
+    */
+    @SuppressWarnings("finally")
 	private int up() {
 		try {
 			Thread.sleep(Main.ELEVATOR_TIME_TO_UP_DOWN * 1000);
@@ -147,15 +183,21 @@ public class Elevator extends Thread {
 		}
 	}
 
-	public int getCurrentFloor() {
+	/** Return the elevator current floor. */
+    public int getCurrentFloor() {
 		return this.currentFloor;
 	}
 
+    /**
+    * Set the elevator state.
+    * @param elevatorState The elevator state as defined in ElevatorState enum.
+    */
     public void setElevatorState(ElevatorState elevatorState) {
         this.elevatorState = elevatorState;
     }
 
-	public ElevatorState getElevatorState(){
+	/** Return the elevator current state. */
+    public ElevatorState getElevatorState(){
 		return this.elevatorState;
 	}
 

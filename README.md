@@ -1,5 +1,6 @@
 # SCE (Elevator Control System)
 A small system to simulate the working of elevators where each them work concurrently.
+Created for Concurrent Computing class(MAB117) at Federal University of Rio de Janeiro(UFRJ).
 
 > "9. Be original, XGH hasn't design pattern." - XGH teachings
 
