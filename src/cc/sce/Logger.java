@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.PrintWriter;
 
 public class Logger {
-    
+
     private static String directoryPath = "./output";
     private int threadID;
     private PrintWriter writer;
@@ -21,7 +21,7 @@ public class Logger {
 
     public static void prepareDirectoryOutput() {
         File outputDirectory = new File( Logger.directoryPath );
-        
+
         if( !outputDirectory.exists() ) {
             if( ! outputDirectory.mkdir() ) {
                System.exit(-1);
@@ -35,8 +35,9 @@ public class Logger {
 
     public void write(String message) {
         long timeElapsed = System.currentTimeMillis() - Main.RUNTIME_START;
-        
+
         writer.println( timeElapsed + "ms - [E" + this.threadID + "] " + message);
+        System.out.println(timeElapsed + "ms - [E" + this.threadID + "] " + message);
     }
 
     public void close() {
