@@ -1,5 +1,6 @@
 package cc.sce;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -22,8 +23,22 @@ public class ElevatorController {
         boolean firstTime = true;
         Elevator elevatorClosely = null;
         int absoluteDistance = -1;
+        ArrayList<Integer> sortedListBySizeOfQueue = new ArrayList<Integer>();
 
         for(Integer i: this.requests.keySet()) {
+            int priorityFloor = -1;
+            int auxSize=-1;
+
+            for(Integer j: this.requests.keySet()) {
+                if( !sortedListBySizeOfQueue.contains(j) && this.requests.get(j).size()>auxSize ) {
+                    priorityFloor=j;
+                    auxSize=this.requests.get(j).size();
+                }
+            }
+            sortedListBySizeOfQueue.add(priorityFloor);
+        }
+
+        for(Integer i: sortedListBySizeOfQueue) {
         	firstTime = true;
 
             for(Elevator e: this.elevators) {
